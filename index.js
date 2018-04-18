@@ -8,16 +8,29 @@ import mongoose from 'mongoose';
 import SourceMapSupport from 'source-map-support';
 // import routes
 import todoRoutes from './routes/todo.server.route';
+
+import expressValidation from 'express-validation';
+
 // define our app using express
 const app = express();
 // express-busboy to parse multipart/form-data
 //bb.extend(app);
 // allow-cors
-app.use(function(req,res,next){
+app.use(function(err,req,res,next){
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  if (err instanceof expressValidation.ValidationError) {
+    res.status(err.status).json(err);
+  } else {
+    res.status(500)
+      .json({
+        status: err.status,
+        message: err.message
+      });
+  }
   next();
 })
+
 // configure app
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -27,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const port = process.env.PORT || 3001;
 // connect to database
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1:27017/mern-todo-app', { useMongoClient: true }).then(() => {
+mongoose.connect('mongodb://localhost:27017/mern-todo-app', {}).then(() => {
     console.log("Connected to Database");
 }).catch((err) => {
     console.log("Not Connected to Database ERROR! ", err);
