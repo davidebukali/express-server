@@ -7,12 +7,15 @@ import mongoose from 'mongoose';
 //import bb from 'express-busboy';
 import SourceMapSupport from 'source-map-support';
 // import routes
-import todoRoutes from './routes/todo.server.route';
+import serverRoutes from './routes/server.route';
 
 import expressValidation from 'express-validation';
 
 // define our app using express
 const app = express();
+
+global.__basedir = __dirname;
+
 // express-busboy to parse multipart/form-data
 //bb.extend(app);
 // allow-cors
@@ -49,7 +52,7 @@ mongoose.connect('mongodb://localhost:27017/mern-todo-app', {}).then(() => {
 // add Source Map Support
 SourceMapSupport.install();
 
-app.use('/api', todoRoutes);
+app.use('/api', serverRoutes);
 app.get('/', (req,res) => {
   return res.end('Api working');
 })
