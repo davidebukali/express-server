@@ -14,6 +14,18 @@ const router = express.Router();
 // define our app using express
 const app = express();
 
+//Image download variables
+const imgURL = "https://dummyimage.com/300/09f/fff.png";
+var Jimp = require("jimp")
+var fs = require('fs'),
+request = require('request');
+
+var download = function(uri, filename, callback){
+    request.head(uri, function(err, res, body){
+        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+};
+
 router.route('/login')
 .post(validate(validations.loginTask), serverController.loginUser);
 
@@ -24,7 +36,6 @@ router.use(function(req, res, next) {
 
   // decode token
   if (token) {
-
     // verifies secret and checks exp
     jwt.verify(token, 'murderInc', function(err, decoded) {      
     	if (err) {
@@ -51,17 +62,6 @@ router.use(function(req, res, next) {
 
 router.route('/patch-object')
 .post(validate(validations.patchTask), serverController.patchJson);
-
-const imgURL = "https://dummyimage.com/300/09f/fff.png";
-var Jimp = require("jimp")
-var fs = require('fs'),
-request = require('request');
-
-var download = function(uri, filename, callback){
-	request.head(uri, function(err, res, body){
-		request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-	});
-};
 
 router.route('/resizeImage')
 .post((req, res) => {
