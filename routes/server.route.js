@@ -52,7 +52,7 @@ router.use(function(req, res, next) {
 router.route('/patch-object')
 .post(validate(validations.patchTask), serverController.patchJson);
 
-const imgURL = "https://ichef.bbci.co.uk/news/660/cpsprodpb/37B5/production/_89716241_thinkstockphotos-523060154.jpg";
+const imgURL = "https://dummyimage.com/300/09f/fff.png";
 var Jimp = require("jimp")
 var fs = require('fs'),
 request = require('request');
@@ -67,9 +67,9 @@ router.route('/resizeImage')
 .post((req, res) => {
 	Jimp.read(imgURL, function(err,img){
 		if (err) throw err;
-    img.resize(32, 32).write("lena-small-bw.jpg"); // save
-    res.download(__basedir+'/lena-small-bw.jpg');
-});
+        img.resize(32, 32).write("lena-small-bw.png"); // save
+        res.download(__basedir+'/lena-small-bw.png');
+    });
 });
 
 export default router;
